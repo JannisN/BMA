@@ -33,7 +33,7 @@ namespace Crystal
 			"return (2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR));"
 			"}"*/
 			"void main() {"
-			"frag_colour = vec4(depth, depth, depth, 1);"
+			"frag_colour = vec4(int(depth * 255) / 255.0, depth * 255 - int(depth * 255), depth, 1);"
 			"}";
 
 		depthShader = new Shader(vertexShader, fragmentShader);

@@ -26,8 +26,8 @@ namespace Crystal
 		"vec4 pos = vec4(varTextureCoord.x, varTextureCoord.y, 1.0, 1.0);"
 		"pos.xyz = pos.xyz * 2.0 - 1.0;"
 		"pos = aInverseProjectionMatrix * pos;"
-		"vec3 fragPos = pos.xyz /* pos.w*/ * texture(gPositionDepth, varTextureCoord).z;"
-		"fragPos.z = texture(gPositionDepth, varTextureCoord).z;"
+		"vec3 fragPos = pos.xyz /* pos.w*/ * (texture(gPositionDepth, varTextureCoord).x + texture(gPositionDepth, varTextureCoord).y / 255.0 / 255.0 /*+ texture(gPositionDepth, varTextureCoord).z / 255.0 / 255.0 / 255.0*/);"
+		"fragPos.z = texture(gPositionDepth, varTextureCoord).x +  texture(gPositionDepth, varTextureCoord).y / 255.0 / 255.0 /*+ texture(gPositionDepth, varTextureCoord).z / 255.0 / 255.0 / 255.0*/;"
 		"vec3 normal = normalize(texture(gNormal, varTextureCoord).xyz * 2.0 - 1.0);"
 		"vec3 randomVec = texture(texNoise, varTextureCoord * noiseScale).xyz;"
 		"vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));"
@@ -44,7 +44,7 @@ namespace Crystal
 		"offset.xyz /= offset.w;"
 		"offset.xyz = offset.xyz * 0.5 + 0.5;"
 
-		"float sampleDepth = texture(gPositionDepth, (1 - offset.xy)).z;"
+		"float sampleDepth = texture(gPositionDepth, (1 - offset.xy)).x;"
 
 		"float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));"
 		"occlusion += (sampleDepth + 0.00/*4*/ <= sample.z ? 1.0 : 0.0) * rangeCheck;"
@@ -223,7 +223,7 @@ namespace Crystal
 
 	AmbientOcclusion::AmbientOcclusion() : ScreenEffect(ssaoSource)
 	{
-		std::uniform_real_distribution<GLfloat> randomFloats(0.2, 1.0); // random floats between 0.0 - 1.0
+		std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // random floats between 0.0 - 1.0
 		std::default_random_engine generator;
 		for (GLuint i = 0; i < 64; ++i)
 		{
@@ -241,12 +241,14 @@ namespace Crystal
 			ssaoKernel.push_back(sample);
 		}
 
+		std::uniform_real_distribution<GLfloat> randomFloats2(0.0, 1.0);
+
 		std::vector<glm::vec3> ssaoNoise;
 		for (GLuint i = 0; i < 16; i++)
 		{
 			glm::vec3 noise(
-				randomFloats(generator) * 2.0 - 1.0,
-				randomFloats(generator) * 2.0 - 1.0,
+				randomFloats2(generator) * 1 + 0.0,
+				randomFloats2(generator) * 1 + 0.0,
 				0.0f);
 			ssaoNoise.push_back(noise);
 		}

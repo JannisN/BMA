@@ -128,7 +128,7 @@ namespace Crystal
 
 		cube = new WavefrontModel("untitled7.obj");
 		cube1 = new WavefrontModel("untitled7.obj");
-		sphere = new WavefrontModel("untitled7.obj");
+		sphere = new WavefrontModel("untitled8.obj");
 		cube->loadTextureFromString("texture2.png");
 		cube1->loadTextureFromString("texture.png");
 
@@ -144,7 +144,7 @@ namespace Crystal
 		noise = new Texture("noise.png");
 
 		renderer->createObject(sphere);
-		sphere->pos = Vec(2, -2, 4);
+		sphere->pos = Vec(2, -1, 4);
 		sphere->rot = Vec(0, -pi, 0);
 		//texture = new Texture("texture.png");
 		Reporter::report(glGetError());
